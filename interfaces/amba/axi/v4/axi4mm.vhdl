@@ -1,40 +1,20 @@
 library ieee ;
-   use ieee.std_logic_1164.all ;
+   use ieee.std_logic_1164.std_ulogic ;
+   use ieee.std_logic_1164.std_ulogic_vector ;
+
+use work.axi4.burst_t ;
+use work.axi4.resp_t ;
+use work.axi4.lock_t ;
+use work.axi4.prot_t ;
+use work.axi4.cache_t ;
 
 package axi4mm is
-
-    type burst_t is (FIXED, INCR, WRAP, RES) ;
-    type resp_t is (OKAY, EXOKAY, SLVERR, DECERR) ;
-    type lock_t is (NORMAL, EXCLUSIVE) ;
-
-    function slv(x : burst_t) return std_ulogic_vector ;
-    function slv(x : resp_t) return std_ulogic_vector ;
-    function sl(x : lock_t) return std_ulogic ;
 
     type burst_lengths_t is array(positive range 2**0 to 2**8) of std_ulogic_vector(7 downto 0) ;
 
     function burst_lengths return burst_lengths_t ;
 
     constant LEN : burst_lengths_t := burst_lengths ;
-
-    type prot_t is record
-        privileged  :   std_ulogic ;
-        nonsecure   :   std_ulogic ;
-        instruction :   std_ulogic ;
-    end record ;
-
-    function pack(x : prot_t) return std_ulogic_vector ;
-    function unpack(x : std_ulogic_vector) return prot_t ;
-
-    type cache_t is record
-        bufferable          :   std_ulogic ;
-        modifiable          :   std_ulogic ;
-        read_allocation     :   std_ulogic ;
-        write_allocation    :   std_ulogic ;
-    end record ;
-
-    function pack(x : cache_t) return std_ulogic_vector ;
-    function unpack(x : std_ulogic_vector) return cache_t ;
 
     type address_t is record
         addr    :   std_ulogic_vector(31 downto 0) ;
