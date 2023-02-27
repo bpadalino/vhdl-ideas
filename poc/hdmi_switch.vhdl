@@ -5,24 +5,34 @@ package hdmi_switch_p is
         n   :   bit ;
     end record ;
 
-    view master of diff_t is
+    type diffs_t is array(natural range <>) of diff_t ;
+
+    view diff_master of diff_t is
         p   :   out ;
         n   :   out ;
     end view ;
 
-    type diffs_t is array(natural range <>) of diff_t ;
+    --view diff_slave of diff_t is
+    --    p   :   in ;
+    --    n   :   in ;
+    --end view ;
 
-    alias diff_slave is master'converse ;
+    alias diff_slave is diff_master'converse ;
 
     type hdmi_t is record
         tmds  : diffs_t(0 to 2) ;
         clock : diff_t ;
     end record ;
 
-    view diff_master of hdmi_t is
+    view master of hdmi_t is
         tmds  : view (diff_master) ;
         clock : view diff_master ;
     end view ;
+
+    --view slave of hdmi_t is
+    --    tmds  : view (diff_slave) ;
+    --    clock : view diff_slave ;
+    --end view ;
 
     alias slave is master'converse ;
 
@@ -33,52 +43,56 @@ package hdmi_switch_p is
 
     procedure assign(signal x : view diff_slave of diff_t ; signal y : view diff_master of diff_t) ;
 
-    alias diff_assign is assign [diff_slave, diff_master] ;
+    --alias diff_assign is assign [diff_slave, diff_master] ;
 
-    procedure assign(signal x : view slave of hdmi_t; signal y : view master of hdmi_t) ;
-
-    alias hdmi_assign is assign [slave, master] ;
+    procedure hdmi_assign(signal x : view slave of hdmi_t; signal y : view master of hdmi_t) ;
 
 end package ;
 
-package body hdmi_switch_t is
+package body hdmi_switch_p is
 
-    procedure assign(signal x : view slave of diff_t ; signal y : view master of diff_t) is
+    procedure assign(signal x : view diff_slave of diff_t ; signal y : view diff_master of diff_t) is
     begin
         y.p <= x.p ;
         y.n <= x.n ;
     end procedure ;
 
-
-    procedure assign(signal x : view slave of hdmi_t ; signal y : view master of hdmi_t) is
+    procedure hdmi_assign(signal x : view slave of hdmi_t ; signal y : view master of hdmi_t) is
     begin
-        for idx in x.tmds loop
-            assign(x.tmds(idx), y.tmdx(idx)) ;
+        for idx in x.tmds'range loop
+            assign(x.tmds(idx), y.tmds(idx)) ;
         end loop ;
         assign(x.clock, y.clock) ;
     end procedure ;
 
-
 end package body ;
 
 use work.hdmi_switch_p.all ;
-use work.generic_mux.all ;
 
 entity hdmi_switch is
   port (
     hdmi_sel    : input_source_t ;
     hdmi_inputs : view (slave) of hdmi_inputs_t ;
-    hdmi_output : view master of hdmi_t
+    hdmi_output : view master of hdmi_t ;
+    hdmi_output2 : view master of hdmi_t
   ) ;
 end entity ;
 
 architecture arch of hdmi_switch is
 
+    signal sel : hdmi_inputs'element ;
+
 begin
 
-    U_mux : generic_mux
+    -- Works
+    sel <= hdmi_inputs(hdmi_sel) ;
+    hdmi_assign(sel, hdmi_output2) ;
+
+    -- Doesn't work
+    U_mux : entity work.generic_mux
       generic map (
-        elements_t => hdmi_inputs_t,
+        elements_t => hdmi_inputs'subtype,
+        output_t   => hdmi_output'subtype,
         assign     => hdmi_assign
       ) port map (
         sel    => hdmi_sel,

@@ -1,7 +1,8 @@
 entity generic_mux is
   generic (
     type elements_t is array(type is (<>)) of type is private ;
-    procedure assign(signal x : elements_t'element ;  signal y : elements_t'element) ;
+    type output_t is private ;
+    procedure assign(signal x : elements_t'element ;  signal y : output_t) ;
   ) ;
   port (
     sel     : in  elements_t'index ;
