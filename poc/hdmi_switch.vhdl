@@ -20,21 +20,21 @@ package hdmi_switch_p is
     alias diff_slave is diff_master'converse ;
 
     type hdmi_t is record
-        tmds  : diffs_t(0 to 2) ;
+        data  : diffs_t(0 to 2) ;
         clock : diff_t ;
     end record ;
 
-    view master of hdmi_t is
-        tmds  : view (diff_master) ;
+    view hdmi_master of hdmi_t is
+        data  : view (diff_master) ;
         clock : view diff_master ;
     end view ;
 
-    --view slave of hdmi_t is
-    --    tmds  : view (diff_slave) ;
+    --view hdmi_slave of hdmi_t is
+    --    data  : view (diff_slave) ;
     --    clock : view diff_slave ;
     --end view ;
 
-    alias slave is master'converse ;
+    alias hdmi_slave is hdmi_master'converse ;
 
     -- Some list of sources
     type input_source_t is (eARC0, eARC1, HDMI0, HDMI2, HDMI3) ;
@@ -45,7 +45,7 @@ package hdmi_switch_p is
 
     --alias diff_assign is assign [diff_slave, diff_master] ;
 
-    procedure hdmi_assign(signal x : view slave of hdmi_t; signal y : view master of hdmi_t) ;
+    procedure hdmi_assign(signal x : view hdmi_slave of hdmi_t; signal y : view hdmi_master of hdmi_t) ;
 
 end package ;
 
@@ -57,10 +57,10 @@ package body hdmi_switch_p is
         y.n <= x.n ;
     end procedure ;
 
-    procedure hdmi_assign(signal x : view slave of hdmi_t ; signal y : view master of hdmi_t) is
+    procedure hdmi_assign(signal x : view hdmi_slave of hdmi_t ; signal y : view hdmi_master of hdmi_t) is
     begin
-        for idx in x.tmds'range loop
-            assign(x.tmds(idx), y.tmds(idx)) ;
+        for idx in x.data'range loop
+            assign(x.data(idx), y.data(idx)) ;
         end loop ;
         assign(x.clock, y.clock) ;
     end procedure ;
@@ -72,9 +72,9 @@ use work.hdmi_switch_p.all ;
 entity hdmi_switch is
   port (
     hdmi_sel    : input_source_t ;
-    hdmi_inputs : view (slave) of hdmi_inputs_t ;
-    hdmi_output : view master of hdmi_t ;
-    hdmi_output2 : view master of hdmi_t
+    hdmi_inputs : view (hdmi_slave) of hdmi_inputs_t ;
+    hdmi_output : view hdmi_master of hdmi_t ;
+    hdmi_output2 : view hdmi_master of hdmi_t
   ) ;
 end entity ;
 
