@@ -56,4 +56,23 @@ package axi4s is
 
     end package ;
 
+    procedure assign(signal x : view slave of axis_t ; signal y : view master of axis_t) ;
+
 end package ;
+
+package body axi4s is
+
+    procedure assign(signal x : view slave of axis_t ; signal y : view master of axis_t) is
+    begin
+        y.data  <= x.data ;
+        y.dest  <= x.dest ;
+        y.id    <= x.id ;
+        y.keep  <= x.keep ;
+        y.strb  <= x.strb ;
+        y.user  <= x.user ;
+        y.last  <= x.last ;
+        y.valid <= x.valid ;
+        x.ready <= y.ready ;
+    end procedure ;
+
+end package body ;
