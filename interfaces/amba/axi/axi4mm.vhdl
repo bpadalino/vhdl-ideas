@@ -203,4 +203,6 @@ package axi4mm is
 
     end package ;
 
+    package aximm256 is new make ;
+
 end package ;

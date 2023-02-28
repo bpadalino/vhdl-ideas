@@ -5,6 +5,10 @@ package util is
 
     impure function to_string(variable value : value_mirror) return string ;
 
+    -- Good functions to have for any data type
+    --function pack(x : sometype) return rv_t of std_ulogic_vector ;
+    --function unpack(x : std_ulogic_vector) return rv_t of sometype ;
+
 end package ;
 
 package body util is

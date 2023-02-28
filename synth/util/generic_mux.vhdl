@@ -3,7 +3,7 @@ entity generic_mux is
     type elements_t is array(type is (<>)) of type is private ;
     -- Input array element might not be the same type as the output, so we need to know that here for the assign procedure
     type output_t is private ;
-    procedure assign(signal x : elements_t'element ;  signal y : output_t) ;
+    procedure assign(signal x : in elements_t'element ;  signal y : out output_t) ;
   ) ;
   port (
     sel     : in  elements_t'index ;
