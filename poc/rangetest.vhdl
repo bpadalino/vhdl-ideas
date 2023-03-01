@@ -73,54 +73,54 @@ begin
         variable l : std.textio.line ;
     begin
         -- A's
-        std.textio.write(l, to_string(overlap(a, a)) & LF) ;
-        std.textio.write(l, to_string(overlap(a, b)) & LF) ;
-        std.textio.write(l, to_string(overlap(a, c)) & LF) ;
-        std.textio.write(l, to_string(overlap(a, d)) & LF) ;
-        std.textio.write(l, to_string(overlap(a, e)) & LF) ;
-        std.textio.write(l, to_string(overlap(a, f)) & LF) ;
+        write(l, to_string(overlap(a, a)) & LF) ;
+        write(l, to_string(overlap(a, b)) & LF) ;
+        write(l, to_string(overlap(a, c)) & LF) ;
+        write(l, to_string(overlap(a, d)) & LF) ;
+        write(l, to_string(overlap(a, e)) & LF) ;
+        write(l, to_string(overlap(a, f)) & LF) ;
 
         -- B's
-        std.textio.write(l, to_string(overlap(b, a)) & LF) ;
-        std.textio.write(l, to_string(overlap(b, b)) & LF) ;
-        std.textio.write(l, to_string(overlap(b, c)) & LF) ;
-        std.textio.write(l, to_string(overlap(b, d)) & LF) ;
-        std.textio.write(l, to_string(overlap(b, e)) & LF) ;
-        std.textio.write(l, to_string(overlap(b, f)) & LF) ;
+        write(l, to_string(overlap(b, a)) & LF) ;
+        write(l, to_string(overlap(b, b)) & LF) ;
+        write(l, to_string(overlap(b, c)) & LF) ;
+        write(l, to_string(overlap(b, d)) & LF) ;
+        write(l, to_string(overlap(b, e)) & LF) ;
+        write(l, to_string(overlap(b, f)) & LF) ;
 
         -- C's
-        std.textio.write(l, to_string(overlap(c, a)) & LF) ;
-        std.textio.write(l, to_string(overlap(c, b)) & LF) ;
-        std.textio.write(l, to_string(overlap(c, c)) & LF) ;
-        std.textio.write(l, to_string(overlap(c, d)) & LF) ;
-        std.textio.write(l, to_string(overlap(c, e)) & LF) ;
-        std.textio.write(l, to_string(overlap(c, f)) & LF) ;
+        write(l, to_string(overlap(c, a)) & LF) ;
+        write(l, to_string(overlap(c, b)) & LF) ;
+        write(l, to_string(overlap(c, c)) & LF) ;
+        write(l, to_string(overlap(c, d)) & LF) ;
+        write(l, to_string(overlap(c, e)) & LF) ;
+        write(l, to_string(overlap(c, f)) & LF) ;
 
         -- D's
-        std.textio.write(l, to_string(overlap(d, a)) & LF) ;
-        std.textio.write(l, to_string(overlap(d, b)) & LF) ;
-        std.textio.write(l, to_string(overlap(d, c)) & LF) ;
-        std.textio.write(l, to_string(overlap(d, d)) & LF) ;
-        std.textio.write(l, to_string(overlap(d, e)) & LF) ;
-        std.textio.write(l, to_string(overlap(d, f)) & LF) ;
+        write(l, to_string(overlap(d, a)) & LF) ;
+        write(l, to_string(overlap(d, b)) & LF) ;
+        write(l, to_string(overlap(d, c)) & LF) ;
+        write(l, to_string(overlap(d, d)) & LF) ;
+        write(l, to_string(overlap(d, e)) & LF) ;
+        write(l, to_string(overlap(d, f)) & LF) ;
 
         -- E's
-        std.textio.write(l, to_string(overlap(e, a)) & LF) ;
-        std.textio.write(l, to_string(overlap(e, b)) & LF) ;
-        std.textio.write(l, to_string(overlap(e, c)) & LF) ;
-        std.textio.write(l, to_string(overlap(e, d)) & LF) ;
-        std.textio.write(l, to_string(overlap(e, e)) & LF) ;
-        std.textio.write(l, to_string(overlap(e, f)) & LF) ;
+        write(l, to_string(overlap(e, a)) & LF) ;
+        write(l, to_string(overlap(e, b)) & LF) ;
+        write(l, to_string(overlap(e, c)) & LF) ;
+        write(l, to_string(overlap(e, d)) & LF) ;
+        write(l, to_string(overlap(e, e)) & LF) ;
+        write(l, to_string(overlap(e, f)) & LF) ;
 
         -- F's
-        std.textio.write(l, to_string(overlap(f, a)) & LF) ;
-        std.textio.write(l, to_string(overlap(f, b)) & LF) ;
-        std.textio.write(l, to_string(overlap(f, c)) & LF) ;
-        std.textio.write(l, to_string(overlap(f, d)) & LF) ;
-        std.textio.write(l, to_string(overlap(f, e)) & LF) ;
-        std.textio.write(l, to_string(overlap(f, f)) & LF) ;
+        write(l, to_string(overlap(f, a)) & LF) ;
+        write(l, to_string(overlap(f, b)) & LF) ;
+        write(l, to_string(overlap(f, c)) & LF) ;
+        write(l, to_string(overlap(f, d)) & LF) ;
+        write(l, to_string(overlap(f, e)) & LF) ;
+        write(l, to_string(overlap(f, f)) & LF) ;
 
-        std.textio.writeline(std.textio.output, l) ;
+        writeline(std.textio.output, l) ;
 
         -- Done
         std.env.stop ;
