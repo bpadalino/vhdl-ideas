@@ -213,6 +213,6 @@ package axi4mm is
 
     package aximm256 is new make ;
 
-    procedure assign(signal l : view manager of aximm_t ; signal r : view subordinate of aximm_t) ;
+    procedure attach(signal l : view manager of aximm_t ; signal r : view subordinate of aximm_t) ;
 
 end package ;

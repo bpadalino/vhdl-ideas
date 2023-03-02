@@ -56,13 +56,13 @@ package axi4s is
 
     end package ;
 
-    procedure assign(signal x : view rx of axis_t ; signal y : view tx of axis_t) ;
+    procedure attach(signal x : view rx of axis_t ; signal y : view tx of axis_t) ;
 
 end package ;
 
 package body axi4s is
 
-    procedure assign(signal x : view rx of axis_t ; signal y : view tx of axis_t) is
+    procedure attach(signal x : view rx of axis_t ; signal y : view tx of axis_t) is
     begin
         y.data  <= x.data ;
         y.dest  <= x.dest ;

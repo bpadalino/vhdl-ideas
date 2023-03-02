@@ -11,7 +11,7 @@ package body axi4mm is
         return rv ;
     end function ;
 
-    procedure assign(signal l : view address_manager of address_t ; signal r : view address_subordinate of address_t) is
+    procedure attach(signal l : view address_manager of address_t ; signal r : view address_subordinate of address_t) is
     begin
         l.addr   <= r.addr ;
         l.prot   <= r.prot ;
@@ -28,7 +28,7 @@ package body axi4mm is
         r.ready  <= l.ready ;
     end procedure ;
 
-    procedure assign(signal l : view bresp_manager of bresp_t ; signal r : view bresp_subordinate of bresp_t) is
+    procedure attach(signal l : view bresp_manager of bresp_t ; signal r : view bresp_subordinate of bresp_t) is
     begin
         r.resp  <= l.resp ;
         r.valid <= l.valid ;
@@ -37,7 +37,7 @@ package body axi4mm is
         l.ready <= r.ready ;
     end procedure ;
 
-    procedure assign(signal l : view wdata_manager of wdata_t ; signal r : view wdata_subordinate of wdata_t) is
+    procedure attach(signal l : view wdata_manager of wdata_t ; signal r : view wdata_subordinate of wdata_t) is
     begin
         l.data  <= r.data ;
         l.stb   <= r.stb ;
@@ -47,7 +47,7 @@ package body axi4mm is
         r.ready <= l.ready ;
     end procedure ;
 
-    procedure assign(signal l : view rdata_manager of rdata_t ; signal r : view rdata_subordinate of rdata_t) is
+    procedure attach(signal l : view rdata_manager of rdata_t ; signal r : view rdata_subordinate of rdata_t) is
     begin
         r.data  <= l.data ;
         r.valid <= l.valid ;
@@ -57,14 +57,14 @@ package body axi4mm is
         l.ready <= r.ready ;
     end procedure ;
 
-    procedure assign(signal l : view manager of aximm_t ; signal r : view subordinate of aximm_t) is
+    procedure attach(signal l : view manager of aximm_t ; signal r : view subordinate of aximm_t) is
     begin
         -- Incompatible mode views
-        assign(l.aw, r.aw) ;
-        assign(l.b,  r.b) ;
-        assign(l.w,  r.w) ;
-        assign(l.ar, r.ar) ;
-        assign(l.r,  r.r) ;
+        attach(l.aw, r.aw) ;
+        attach(l.b,  r.b) ;
+        attach(l.w,  r.w) ;
+        attach(l.ar, r.ar) ;
+        attach(l.r,  r.r) ;
     end procedure ;
 
 end package body ;
