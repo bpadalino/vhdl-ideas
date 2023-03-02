@@ -205,4 +205,66 @@ package axi4mm is
 
     package aximm256 is new make ;
 
+    procedure assign(signal l : view master of aximm_t ; signal r : view slave of aximm_t) ;
+
 end package ;
+
+package body axi4mm is
+
+    procedure assign(signal l : view address_master of address_t ; signal r : view address_slave of address_t) is
+    begin
+        l.addr   <= r.addr ;
+        l.prot   <= r.prot ;
+        l.size   <= r.size ;
+        l.burst  <= r.burst ;
+        l.cache  <= r.cache ;
+        l.id     <= r.id ;
+        l.len    <= r.len ;
+        l.lock   <= r.lock ;
+        l.qos    <= r.qos ;
+        l.region <= r.region ;
+        l.user   <= r.user ;
+        l.valid  <= r.valid ;
+        r.ready  <= l.ready ;
+    end procedure ;
+
+    procedure assign(signal l : view bresp_master of bresp_t ; signal r : view bresp_slave of bresp_t) is
+    begin
+        r.resp  <= l.resp ;
+        r.valid <= l.valid ;
+        r.id    <= l.id ;
+        r.user  <= l.user ;
+        l.ready <= r.ready ;
+    end procedure ;
+
+    procedure assign(signal l : view wdata_master of wdata_t ; signal r : view wdata_slave of wdata_t) is
+    begin
+        l.data  <= r.data ;
+        l.stb   <= r.stb ;
+        l.valid <= r.valid ;
+        l.last  <= r.last ;
+        l.user  <= r.user ;
+        r.ready <= l.ready ;
+    end procedure ;
+
+    procedure assign(signal l : view rdata_master of rdata_t ; signal r : view rdata_slave of rdata_t) is
+    begin
+        r.data  <= l.data ;
+        r.valid <= l.valid ;
+        r.last  <= l.last ;
+        r.id    <= l.id ;
+        r.user  <= l.user ;
+        l.ready <= r.ready ;
+    end procedure ;
+
+    procedure assign(signal l : view master of aximm_t ; signal r : view slave of aximm_t) is
+    begin
+        -- Incompatible mode views
+        assign(l.aw, r.aw) ;
+        assign(l.b,  r.b) ;
+        assign(l.w,  r.w) ;
+        assign(l.ar, r.ar) ;
+        assign(l.r,  r.r) ;
+    end procedure ;
+
+end package body ;
