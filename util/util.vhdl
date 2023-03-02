@@ -1,156 +1,3 @@
--- Balanced Tree
-package btree is
-
-end package ;
-
--- Ordered List
-package list is
-    -- type could be value_mirror to hold a bunch of different records?
-    -- generic package or generic protected type?
-    -- generic protected type makes more sense
-    type list is protected generic(type t) ;
-        procedure prepend(x : t) ;
-        procedure append(x : t) ;
-        procedure insert(x : t ; index : natural) ;
-        procedure clear(r : natural'range'record) ;
-        impure function size return natural ;
-        impure function get(index : natural) return rv_t of t ;
-        impure function iterate(from : natural := 0) return natural'range'record ;
-    end protected ;
-end package ;
-
-package body list is
-
-    type list is protected body
-        variable lsize : natural ;
-
-        procedure prepend(x : t) is
-        begin
-        end procedure ;
-
-        procedure append(x : t) is
-        begin
-        end procedure ;
-
-        procedure insert(x : t ; index : natural) is
-        begin
-
-        end procedure ;
-
-        procedure clear(r : natural'range'record) is
-        begin
-
-        end procedure ;
-
-        impure function size return natural is
-        begin
-            return lsize ;
-        end function ;
-
-        impure function get(index : natural) return rv_t of t is
-            variable rv : rv_t ;
-        begin
-            return rv ;
-        end function ;
-
-        impure function iterate(from : natural := 0) return natural'range'record is
-            subtype rv is natural range from to lsize-1 ;
-        begin
-            return rv'range'record ;
-        end function ;
-    end protected body ;
-
-end package body ;
-
--- Unordered Dictionary
-package dict is
-    type dict is protected
-      generic(
-        type keys_t is array(natural range <>) of type is private ;
-        type value_t ;
-        function "<"(l, r : keys_t'element) return boolean is <>
-      ) ;
-        procedure add(k : keys_t'element ; v : value_t) ;
-        impure function keys return keys_t ;
-        impure function get(key : keys_t'element) return value_t ;
-        impure function exists(key : keys_t'element) return boolean ;
-        impure function size return natural ;
-    end protected ;
-end package ;
-
-package body dict is
-
-    type dict is protected body
-        variable lsize : natural ;
-        procedure add(k : keys_t'element ; v : value_t) is
-        begin
-
-        end procedure ;
-
-        impure function keys return keys_t is
-            variable rv : keys_t(0 to lsize-1) ;
-        begin
-            return rv ;
-        end function ;
-
-        impure function get(key : keys_t'element) return value_t is
-            variable rv : value_t ;
-        begin
-            return rv ;
-        end function ;
-
-        impure function exists(key : keys_t'element) return boolean is
-        begin
-            return false ;
-        end function ;
-
-        impure function size return natural is
-        begin
-            return lsize ;
-        end function ;
-    end protected body ;
-
-end package body ;
-
-package memory is
-
-    type memory is protected
-        impure function read(r : natural'range'record) return rv_t of bit_vector ;
-        procedure write(r : natural'range'record ; v : bit_vector) ;
-        procedure randomize(r : natural'range'record) ;
-        procedure clear(r : natural'range'record) ;
-    end protected ;
-
-end package ;
-
-package body memory is
-
-    -- Create a btree of flat memory with ranges?
-    type memory is protected body
-        impure function read(r : natural'range'record) return rv_t of bit_vector is
-            variable rv : rv_t ;
-        begin
-            return rv ;
-        end function ;
-
-        procedure write(r : natural'range'record ; v : bit_vector) is
-        begin
-
-        end procedure ;
-
-        procedure randomize(r : natural'range'record) is
-        begin
-
-        end procedure ;
-
-        procedure clear(r : natural'range'record) is
-        begin
-
-        end procedure ;
-    end protected body ;
-
-end package body ;
-
 use std.reflection.all ;
 
 library ieee ;
@@ -164,16 +11,26 @@ package util is
     package sim is
         impure function to_string(variable value : value_mirror) return string ;
 
+        ---- Not doable - can't hold a file inside of a protected type
+        --type file_t is protected
+        --    procedure rewind ;
+        --    procedure close ;
+        --    procedure seek(offset : integer ; origin : file_origin_kind := FILE_ORIGIN_BEGIN) ;
+        --    procedure read(value : out string) ;
+        --    procedure write(value : string) ;
+        --    procedure flush ;
+        --    impure function fopen(fname : string ; mode : file_open_kind := READ_MODE) return file_open_status ;
+        --    impure function state return file_open_state ;
+        --    impure function size return integer ;
+        --    impure function mode return file_open_kind ;
+        --    impure function position(origin : file_origin_kind := FILE_ORIGIN_BEGIN) return integer ;
+        --    impure function canseek return boolean ;
+        --    impure function endfile return boolean ;
+        --end protected ;
 
         -- Good functions to have for any data type
         --function pack(x : sometype) return rv_t of std_ulogic_vector ;
         --function unpack(x : std_ulogic_vector) return rv_t of sometype ;
-
-        --type memory is protected
-        --    impure function read( ;
-        --    impure function write ;
-        --    impure function randomize ;
-        --end protected ;
 
         --procedure transact(x : transaction_list ; i : view blah) ;
 
@@ -377,6 +234,7 @@ package body util is
         --    return rv'range'record ;
         --end function ;
 
+        -- part of a bigint?
         function to_integer(x : character) return rv_t of integer is
             constant rv : natural := character'pos(x) - character'pos('0') when character'pos(x) < 58 else
                                      character'pos(x) - character'pos('A') + 10 when character'pos(x) < 71 else
@@ -404,6 +262,11 @@ package body util is
             end loop ;
             return rv ;
         end function ;
+
+        function from_string(x : string) return rv_t of signed ;
+        function from_hstring(x : string) return rv_t of signed ;
+        function from_ostring(x : string) return rv_t of signed ;
+        function from_bstring(x : string) return rv_t of signed ;
 
         function to_signed(x : string ; base : positive := 10) return rv_t of signed is
             variable rv : rv_t := (others =>'0') ;
@@ -463,47 +326,6 @@ package body util is
         begin
             return l when (l < r) else r ;
         end function ;
-
-        --function overlap
-        --  generic (
-        --    type array_t is array(type is (<>)) of type is private ;
-        --    function maximum(l, r : array_t'index) return boolean is <> ;
-        --    function minimum(l, r : array_t'index) return boolean is <> ;
-        --  ) parameter (
-        --    l, r : array_t ;
-        --  ) return array_t'index'range'record
-        --is
-        --    constant lrange : array_t'index'range'record := l'range'value ;
-        --    constant rrange : array_t'index'range'record := r'range'value ;
-        --    variable orange : array_t'index'range'record := l'range'value ;
-        --begin
-        --    if lrange.direction /= rrange.direction then
-        --        -- Choosing to be ascending
-        --        orange.direction := ascending ;
-        --        if lrange.direction = ascending then
-        --            -- L: low to high
-        --            -- R: high downto low
-        --            orange.left := maximum(lrange.left, rrange.right) ;
-        --            orange.right := minimum(lrange.right, rrange.left) ;
-        --        else
-        --            -- L: high downto low
-        --            -- R: low to high
-        --            orange.left := maximum(lrange.right, rrange.left) ;
-        --            orange.right := minimum(lrange.left, rrange.right) ;
-        --        end if ;
-        --    else
-        --        if lrange.direction = ascending then
-        --            -- low to high
-        --            orange.left := maximum(lrange.left, rrange.left) ;
-        --            orange.right := minimum(lrange.right, rrange.right) ;
-        --        else
-        --            -- high downto low
-        --            orange.left := minimum(lrange.left, rrange.left) ;
-        --            orange.right := maximum(lrange.right, rrange.right) ;
-        --        end if ;
-        --    end if ;
-        --    return orange ;
-        --end function ;
 
     end package body ;
 
