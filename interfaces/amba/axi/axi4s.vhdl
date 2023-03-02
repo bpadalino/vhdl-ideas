@@ -17,7 +17,7 @@ package axi4s is
 
     type axis_array_t is array(natural range <>) of axis_t ;
 
-    view master of axis_t is
+    view tx of axis_t is
         data    :   out ;
         dest    :   out ;
         id      :   out ;
@@ -29,7 +29,7 @@ package axi4s is
         ready   :   in ;
     end view ;
 
-    alias slave is master'converse ;
+    alias rx is tx'converse ;
 
     package make is
       generic (
@@ -56,13 +56,13 @@ package axi4s is
 
     end package ;
 
-    procedure assign(signal x : view slave of axis_t ; signal y : view master of axis_t) ;
+    procedure assign(signal x : view rx of axis_t ; signal y : view tx of axis_t) ;
 
 end package ;
 
 package body axi4s is
 
-    procedure assign(signal x : view slave of axis_t ; signal y : view master of axis_t) is
+    procedure assign(signal x : view rx of axis_t ; signal y : view tx of axis_t) is
     begin
         y.data  <= x.data ;
         y.dest  <= x.dest ;

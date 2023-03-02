@@ -32,9 +32,7 @@ package axi4mm is
         ready   :   std_ulogic ;
     end record ;
 
-    --function to_string(x : address_t) return string ;
-
-    view address_master of address_t is
+    view address_manager of address_t is
         addr      :   out ;
         prot      :   out ;
         size      :   out ;
@@ -50,7 +48,23 @@ package axi4mm is
         ready     :   in ;
     end view ;
 
-    alias address_slave is address_master'converse ;
+    view address_subordinate of address_t is
+        addr      :   in ;
+        prot      :   in ;
+        size      :   in ;
+        burst     :   in ;
+        cache     :   in ;
+        id        :   in ;
+        len       :   in ;
+        lock      :   in ;
+        qos       :   in ;
+        region    :   in ;
+        user      :   in ;
+        valid     :   in ;
+        ready     :   out ;
+    end view ;
+
+    --alias address_subordinate is address_manager'converse ;
 
     type bresp_t is record
         resp       :   resp_t ;
@@ -60,9 +74,7 @@ package axi4mm is
         user       :   std_ulogic_vector ;
     end record ;
 
-    --function to_string(x : bresp_t) return string ;
-
-    view bresp_master of bresp_t is
+    view bresp_manager of bresp_t is
         resp       :   in ;
         valid      :   in ;
         ready      :   out ;
@@ -70,7 +82,7 @@ package axi4mm is
         user       :   in ;
     end view ;
 
-    alias bresp_slave is bresp_master'converse ;
+    alias bresp_subordinate is bresp_manager'converse ;
 
     type wdata_t is record
         data       :   std_ulogic_vector ;
@@ -81,9 +93,7 @@ package axi4mm is
         ready      :   std_ulogic ;
     end record ;
 
-    --function to_string(x : wdata_t) return string ;
-
-    view wdata_master of wdata_t is
+    view wdata_manager of wdata_t is
         data       :   out ;
         stb        :   out ;
         valid      :   out ;
@@ -92,7 +102,7 @@ package axi4mm is
         ready      :   in ;
     end view ;
 
-    alias wdata_slave is wdata_master'converse ;
+    alias wdata_subordinate is wdata_manager'converse ;
 
     type rdata_t is record
         data       :   std_ulogic_vector ;
@@ -103,9 +113,7 @@ package axi4mm is
         ready      :   std_ulogic ;
     end record ;
 
-    --function to_string(x : rdata_t) return string ;
-
-    view rdata_master of rdata_t is
+    view rdata_manager of rdata_t is
         data        :   in ;
         valid       :   in ;
         last        :   in ;
@@ -114,7 +122,7 @@ package axi4mm is
         ready       :   out ;
     end view ;
 
-    alias rdata_slave is rdata_master'converse ;
+    alias rdata_subordinate is rdata_manager'converse ;
 
     type aximm_t is record
         aw  :   address_t ;
@@ -126,15 +134,15 @@ package axi4mm is
 
     type aximm_array_t is array(natural range <>) of aximm_t ;
 
-    view master of aximm_t is
-        aw  :   view address_master ;
-        ar  :   view address_master ;
-        b   :   view bresp_master ;
-        w   :   view wdata_master ;
-        r   :   view rdata_master ;
+    view manager of aximm_t is
+        aw  :   view address_manager ;
+        ar  :   view address_manager ;
+        b   :   view bresp_manager ;
+        w   :   view wdata_manager ;
+        r   :   view rdata_manager ;
     end view ;
 
-    alias slave is master'converse ;
+    alias subordinate is manager'converse ;
 
     -- Bus configuration record used for making new fixed configurations
     type config_t is record
@@ -205,66 +213,6 @@ package axi4mm is
 
     package aximm256 is new make ;
 
-    procedure assign(signal l : view master of aximm_t ; signal r : view slave of aximm_t) ;
+    procedure assign(signal l : view manager of aximm_t ; signal r : view subordinate of aximm_t) ;
 
 end package ;
-
-package body axi4mm is
-
-    procedure assign(signal l : view address_master of address_t ; signal r : view address_slave of address_t) is
-    begin
-        l.addr   <= r.addr ;
-        l.prot   <= r.prot ;
-        l.size   <= r.size ;
-        l.burst  <= r.burst ;
-        l.cache  <= r.cache ;
-        l.id     <= r.id ;
-        l.len    <= r.len ;
-        l.lock   <= r.lock ;
-        l.qos    <= r.qos ;
-        l.region <= r.region ;
-        l.user   <= r.user ;
-        l.valid  <= r.valid ;
-        r.ready  <= l.ready ;
-    end procedure ;
-
-    procedure assign(signal l : view bresp_master of bresp_t ; signal r : view bresp_slave of bresp_t) is
-    begin
-        r.resp  <= l.resp ;
-        r.valid <= l.valid ;
-        r.id    <= l.id ;
-        r.user  <= l.user ;
-        l.ready <= r.ready ;
-    end procedure ;
-
-    procedure assign(signal l : view wdata_master of wdata_t ; signal r : view wdata_slave of wdata_t) is
-    begin
-        l.data  <= r.data ;
-        l.stb   <= r.stb ;
-        l.valid <= r.valid ;
-        l.last  <= r.last ;
-        l.user  <= r.user ;
-        r.ready <= l.ready ;
-    end procedure ;
-
-    procedure assign(signal l : view rdata_master of rdata_t ; signal r : view rdata_slave of rdata_t) is
-    begin
-        r.data  <= l.data ;
-        r.valid <= l.valid ;
-        r.last  <= l.last ;
-        r.id    <= l.id ;
-        r.user  <= l.user ;
-        l.ready <= r.ready ;
-    end procedure ;
-
-    procedure assign(signal l : view master of aximm_t ; signal r : view slave of aximm_t) is
-    begin
-        -- Incompatible mode views
-        assign(l.aw, r.aw) ;
-        assign(l.b,  r.b) ;
-        assign(l.w,  r.w) ;
-        assign(l.ar, r.ar) ;
-        assign(l.r,  r.r) ;
-    end procedure ;
-
-end package body ;

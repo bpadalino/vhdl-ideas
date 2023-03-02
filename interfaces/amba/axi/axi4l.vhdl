@@ -15,14 +15,14 @@ package axi4l is
         ready   :   std_ulogic ;
     end record ;
 
-    view address_master of address_t is
+    view address_manager of address_t is
         addr    :   out ;
         prot    :   out ;
         valid   :   out ;
         ready   :   in ;
     end view ;
 
-    alias address_slave is address_master'converse ;
+    alias address_subordinate is address_manager'converse ;
 
     type bresp_t is record
         resp    :   resp_t ;
@@ -30,13 +30,13 @@ package axi4l is
         ready   :   std_ulogic ;
     end record ;
 
-    view bresp_master of bresp_t is
+    view bresp_manager of bresp_t is
         resp    :   in ;
         valid   :   in ;
         ready   :   out ;
     end view ;
 
-    alias bresp_slave is bresp_master'converse ;
+    alias bresp_subordinate is bresp_manager'converse ;
 
     type wdata_t is record
         data    :   std_ulogic_vector ;
@@ -45,7 +45,7 @@ package axi4l is
         ready   :   std_ulogic ;
     end record ;
 
-    view wdata_master of wdata_t is
+    view wdata_manager of wdata_t is
         data    :   out ;
         strb    :   out ;
         valid   :   out ;
@@ -59,7 +59,7 @@ package axi4l is
         ready   :   std_ulogic ;
     end record ;
 
-    view rdata_master of rdata_t is
+    view rdata_manager of rdata_t is
         data    :   in ;
         resp    :   in ;
         valid   :   in ;
@@ -74,15 +74,15 @@ package axi4l is
         r  : rdata_t ;
     end record ;
 
-    view master of axi4l_t is
-        aw : view address_master ;
-        ar : view address_master ;
-        b  : view bresp_master ;
-        w  : view wdata_master ;
-        r  : view rdata_master ;
+    view manager of axi4l_t is
+        aw : view address_manager ;
+        ar : view address_manager ;
+        b  : view bresp_manager ;
+        w  : view wdata_manager ;
+        r  : view rdata_manager ;
     end view ;
 
-    alias slave is master'converse ;
+    alias subordinate is manager'converse ;
 
     subtype axil32_t is axi4l_t (
         w( data(31 downto 0), strb(3 downto 0) ),
