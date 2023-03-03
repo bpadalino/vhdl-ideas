@@ -17,21 +17,21 @@ package hdmi_switch_p is
 
     type hdmi_inputs_t is array(input_source_t) of hdmi_t ;
 
-    procedure assign(signal x : in hdmi_t ; signal y : out hdmi_t) ;
+    --procedure assign(signal x : in hdmi_t ; signal y : out hdmi_t) ;
 
 end package ;
 
-package body hdmi_switch_p is
-
-    procedure assign(signal x : in hdmi_t ; signal y : out hdmi_t) is
-    begin
-        for idx in x.data'range loop
-            y.data(idx) <= x.data(idx) ;
-        end loop ;
-        y.clock <= x.clock ;
-    end procedure ;
-
-end package body ;
+--package body hdmi_switch_p is
+--
+--    procedure assign(signal x : in hdmi_t ; signal y : out hdmi_t) is
+--    begin
+--        for idx in x.data'range loop
+--            y.data(idx) <= x.data(idx) ;
+--        end loop ;
+--        y.clock <= x.clock ;
+--    end procedure ;
+--
+--end package body ;
 
 use work.hdmi_switch_p.all ;
 
@@ -53,18 +53,18 @@ architecture arch of hdmi_switch is
 
 begin
 
-    assign(hdmi_a, hdmi_b) ;
+    --assign(hdmi_a, hdmi_b) ;
 
     -- Works
-    sel <= hdmi_inputs(hdmi_sel) ;
-    assign(sel, hdmi_output2) ;
+    hdmi_output2 <= hdmi_inputs(hdmi_sel) ;
+    --assign(sel, hdmi_output2) ;
 
     -- Doesn't work
     U_mux : entity work.generic_mux
       generic map (
-        elements_t => hdmi_inputs'subtype,
-        output_t   => hdmi_output'subtype,
-        assign     => assign
+        elements_t => hdmi_inputs'subtype
+        --output_t   => hdmi_output'subtype,
+        --assign     => assign
       ) port map (
         sel    => hdmi_sel,
         inputs => hdmi_inputs,

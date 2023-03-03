@@ -61,8 +61,10 @@ package cpu is
         procedure por(x : bit) ;
         impure function get_clocks return clock_rates_t ;
         procedure set_clock(target : clock_names_t ; freq : real) ;
-        procedure generate_clocks(signal clocks : out clock_domains_t) ;
+        procedure generate_clock(clock : clock_names_t ; signal x : inout clock_domain_t) ;
     end protected ;
+
+    shared variable shared_controller : controller ;
 
 end package ;
 
@@ -100,8 +102,10 @@ package body cpu is
 
     type controller is protected body
         variable clock_rates : clock_rates_t ;
+        variable reset : bit ;
         procedure por(x : bit) is
         begin
+            reset := x ;
         end procedure ;
 
         procedure set_clock(target : clock_names_t ; freq : real) is
@@ -114,11 +118,16 @@ package body cpu is
             return clock_rates ;
         end function ;
 
-        procedure generate_clocks(signal clocks : out clock_domains_t) is
+        procedure generate_clock(clock : clock_names_t ; signal x : inout clock_domain_t) is
         begin
+            if reset = '1' then
+                x.reset <= '1' ;
+            else
+                x.reset <= '0' ;
+            end if ;
+            x.clock <= not x.clock after (1.0/2.0*clock_rates(clock)) * 1 sec ;
         end procedure ;
     end protected body ;
-
 
 end package body ;
 
@@ -138,7 +147,9 @@ architecture arch of cpusim is
 begin
 
     -- Generate clocks
-    --controller.generate_clocks(clock_domains) ;
+    gen_clocks : for idx in clock_domains'range generate
+        work.cpu.shared_controller.generate_clock(idx, clock_domains(idx)) ;
+    end generate ;
 
 end architecture ;
 
@@ -184,9 +195,12 @@ begin
         controller.set_clock(FCLK1, 33.3e6) ;
         controller.set_clock(FCLK2, 26.0e6) ;
         controller.set_clock(FCLK3, 491.52e6) ;
-        wait for 100 ns ;
+        wait for 1000 ns ;
         controller.por('0') ;
+        wait for 1000 ns ;
         wait until rising_edge(clock_domains(FCLK0).clock) and clock_domains(FCLK0).reset = '1' ;
+        report "Done with simulation" ;
+        std.env.stop ;
     end process ;
 
 end architecture ;

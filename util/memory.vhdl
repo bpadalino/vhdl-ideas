@@ -1,7 +1,8 @@
 package memory is
 
-    type memory is protected
+    type memory_t is protected
         impure function read(r : natural'range'record) return rv_t of bit_vector ;
+        impure function read(address : natural ; size : natural) return bit_vector ;
         procedure write(start : natural ; data : bit_vector) ;
         procedure write(r : natural'range'record ; data : bit_vector) ;
         procedure randomize(r : natural'range'record) ;
@@ -13,9 +14,15 @@ end package ;
 package body memory is
 
     -- Create a btree of flat memory with ranges?
-    type memory is protected body
+    type memory_t is protected body
         impure function read(r : natural'range'record) return rv_t of bit_vector is
             variable rv : rv_t ;
+        begin
+            return rv ;
+        end function ;
+
+        impure function read(address : natural ; size : natural) return bit_vector is
+            variable rv : bit_vector(size-1 downto 0) ;
         begin
             return rv ;
         end function ;

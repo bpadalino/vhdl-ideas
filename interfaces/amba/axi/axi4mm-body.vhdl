@@ -57,15 +57,15 @@ package body axi4mm is
         l.ready <= r.ready ;
     end procedure ;
 
-    procedure attach(signal l : view manager of aximm_t ; signal r : view subordinate of aximm_t) is
-    begin
-        -- Incompatible mode views
-        attach(l.aw, r.aw) ;
-        attach(l.b,  r.b) ;
-        attach(l.w,  r.w) ;
-        attach(l.ar, r.ar) ;
-        attach(l.r,  r.r) ;
-    end procedure ;
+    --procedure attach(signal l : view manager of aximm_t ; signal r : view subordinate of aximm_t) is
+    --begin
+    --    -- Incompatible mode views
+    --    attach(l.aw, r.aw) ;
+    --    attach(l.b,  r.b) ;
+    --    attach(l.w,  r.w) ;
+    --    attach(l.ar, r.ar) ;
+    --    attach(l.r,  r.r) ;
+    --end procedure ;
 
 end package body ;
 

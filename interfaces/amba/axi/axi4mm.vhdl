@@ -48,23 +48,7 @@ package axi4mm is
         ready     :   in ;
     end view ;
 
-    view address_subordinate of address_t is
-        addr      :   in ;
-        prot      :   in ;
-        size      :   in ;
-        burst     :   in ;
-        cache     :   in ;
-        id        :   in ;
-        len       :   in ;
-        lock      :   in ;
-        qos       :   in ;
-        region    :   in ;
-        user      :   in ;
-        valid     :   in ;
-        ready     :   out ;
-    end view ;
-
-    --alias address_subordinate is address_manager'converse ;
+    alias address_subordinate is address_manager'converse ;
 
     type bresp_t is record
         resp       :   resp_t ;
@@ -213,6 +197,6 @@ package axi4mm is
 
     package aximm256 is new make ;
 
-    procedure attach(signal l : view manager of aximm_t ; signal r : view subordinate of aximm_t) ;
+    --procedure attach(signal l : view manager of aximm_t ; signal r : view subordinate of aximm_t) ;
 
 end package ;
