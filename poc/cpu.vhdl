@@ -64,8 +64,6 @@ package cpu is
         procedure generate_clock(clock : clock_names_t ; signal x : inout clock_domain_t) ;
     end protected ;
 
-    shared variable shared_controller : controller ;
-
 end package ;
 
 package body cpu is
@@ -127,13 +125,14 @@ package body cpu is
             end if ;
             x.clock <= not x.clock after (1.0/2.0*clock_rates(clock)) * 1 sec ;
         end procedure ;
+
     end protected body ;
 
 end package body ;
 
 entity cpusim is
   port (
-    --controller      : inout work.cpu.controller ;
+    variable controller      : inout work.cpu.controller ;
     clock_domains   : out   work.cpu.clock_domains_t ;
     interrupts      : in    bit_vector(7 downto 0) ;
     --axi_masters     : view (master) of cpu.aximm_masters_t ;
@@ -148,7 +147,7 @@ begin
 
     -- Generate clocks
     gen_clocks : for idx in clock_domains'range generate
-        work.cpu.shared_controller.generate_clock(idx, clock_domains(idx)) ;
+        controller.generate_clock(idx, clock_domains(idx)) ;
     end generate ;
 
 end architecture ;
@@ -177,7 +176,7 @@ begin
     -- Main CPU
     U_cpu : entity work.cpusim
       port map (
-        --controller      =>  controller,
+        controller      =>  controller,
         clock_domains   =>  clock_domains,
         interrupts      =>  interrupts
         --axi_masters     =>  axi_masters,

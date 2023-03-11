@@ -1,5 +1,6 @@
 library std ;
     use std.reflection.all ;
+    use std.textio.all ;
 
 package util is
 
@@ -9,9 +10,50 @@ package util is
     --function pack(x : sometype) return rv_t of std_ulogic_vector ;
     --function unpack(x : std_ulogic_vector) return rv_t of sometype ;
 
+    procedure tee(file f : text ; s : string) ;
+
+    type log is protected
+      generic (
+        fname : string ;
+        id    : string ;
+      ) ;
+        procedure warn(x : string) ;
+        procedure info(x : string) ;
+        procedure err( x : string) ;
+    end protected ;
+
 end package ;
 
 package body util is
+
+    type log is protected body
+        file f : text ;
+        procedure warn(x : string) is
+            constant color_warning : string := work.colors.ansi.YELLOW & id & "/WARNING" & work.colors.ansi.RESET ;
+        begin
+            tee(f, "[" & color_warning & "]" & x) ;
+        end procedure ;
+
+        procedure info(x : string) is
+            constant color_info : string := work.colors.ansi.GREEN & id & "/INFO" & work.colors.ansi.RESET ;
+        begin
+            tee(f, "[" & color_info & "   ]" & x) ;
+        end procedure ;
+
+        procedure err(x : string) is
+            constant color_error : string := work.colors.ansi.RED & id & "/ERROR" & work.colors.ansi.RESET ;
+        begin
+            tee(f, "[" & color_error & "  ]" & x) ;
+        end procedure ;
+    end protected body ;
+
+    procedure tee(file f : text ; s : string) is
+        variable l : line ;
+    begin
+        write(l, s) ;
+        writeline(output, l) ;
+        writeline(f, l) ;
+    end procedure ;
 
     -- can create a string for any value
     impure function to_string(variable value : VALUE_MIRROR) return STRING is
@@ -30,6 +72,7 @@ package body util is
                     return prefix & element_str;
                 end if;
             end block;
+            return "" ;
         end function;
 
         -- string-ify arrays
@@ -64,6 +107,7 @@ package body util is
                     return prefix & element_str;
                 end if;
             end block;
+            return "" ;
         end function;
 
         -- string-ify records
