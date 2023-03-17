@@ -27,7 +27,9 @@ architecture arch of test is
     end record ;
 
     signal a : a_t := ( a => 10, b => 1.01 ) ;
-    signal b : b_t := ( x => 2.01, y => now ) ;
+    signal b : b_t := ( x => 2.01, y => 2000 fs ) ;
+
+    constant value : time := 1 hr ;
 
     impure function extract(variable rec : inout record_value_mirror ; x : string) return real is
         variable v : value_mirror := rec.get(x) ;
@@ -46,9 +48,17 @@ architecture arch of test is
     impure function extract(variable rec : inout record_value_mirror ; x : string) return time is
         variable v : value_mirror := rec.get(x) ;
         variable pv : physical_value_mirror := v.to_physical ;
+        variable ps : physical_subtype_mirror := pv.get_subtype_mirror ;
         variable idx : index := pv.unit_index ;
+        constant scale : natural := ps.scale(idx) ;
     begin
-        return pv.value * time'val(idx) ;
+        for i in 0 to ps.units_length+10 loop
+            report "name(" & to_string(i) & "): " & ps.unit_name(i) ;
+        end loop ;
+        report "scale : " & to_string(scale) ;
+        report "value : " & to_string(pv.value) ;
+        report "name  : " & ps.unit_name(idx) ;
+        return pv.value * 1 ps ;
     end function ;
 
     impure function from(variable x : inout std.reflection.value_mirror) return a_t is
@@ -147,6 +157,9 @@ begin
         variable aprime : a_t ;
         variable bprime : b_t ;
     begin
+        report to_string(value) ;
+        report to_string(a) ;
+        report to_string(b) ;
         arr(0) := a'reflect ;
         arr(1) := b'reflect ;
         sm := arr(0).get_subtype_mirror ;
